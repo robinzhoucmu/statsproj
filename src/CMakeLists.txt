@@ -1,0 +1,1 @@
+add_executable(reader testAnnotationReader.cpp AnnotationReader.cpp)
