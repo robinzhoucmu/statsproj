@@ -19,6 +19,9 @@ all: $(addprefix $(BINDIR)/,$(TARGETS))
 clean:
 	rm -rf $(OBJDIR)/*.o
 	
+$(OBJDIR)/hog_wrappers.o:	$(SRCDIR)/hog_wrappers.cpp $(INCDIR)/hog_wrappers.h
+	@test -e $(dir $@) || mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 $(OBJDIR)/integral_histogram.o:	$(SRCDIR)/integral_histogram.cpp $(INCDIR)/integral_histogram.h
 	@test -e $(dir $@) || mkdir -p $(dir $@)
@@ -32,6 +35,6 @@ $(OBJDIR)/hog.o:	$(SRCDIR)/hog.cpp
 	@test -e $(dir $@) || mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-$(BINDIR)/hog: $(OBJDIR)/hog.o $(OBJDIR)/hog_extractor.o $(OBJDIR)/integral_histogram.o Makefile
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(OBJDIR)/hog.o $(OBJDIR)/integral_histogram.o $(OBJDIR)/hog_extractor.o
+$(BINDIR)/hog: $(OBJDIR)/hog.o $(OBJDIR)/hog_extractor.o $(OBJDIR)/integral_histogram.o $(OBJDIR)/hog_wrappers.o Makefile
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(OBJDIR)/hog.o $(OBJDIR)/integral_histogram.o $(OBJDIR)/hog_extractor.o $(OBJDIR)/hog_wrappers.o 
 
