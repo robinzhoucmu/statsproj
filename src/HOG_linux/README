@@ -1,0 +1,13 @@
+HOG feature extraction
+
+Description
+This program is used to extract HOG(Histograms of oriented gradients) features from images. The integral histogram is used for fast histogram extraction. Both APIs and binary utility are provided.
+It is written in C++.
+
+References
+N. Dalal and B. Triggs, “Histograms of oriented gradients for human detection,” in IEEE Computer Society Conference on Computer Vision and Pattern Recognition, 2005., vol. 1, 2005.
+
+How to use:
+1. To compile the code, you need download Boost library(http://www.boost.org/) with version 1.35 or higher.
+2. To run the binary, you should make sure Boost so library is avaliable
+3. The program are tested with Ubuntu 7.04, however, the API files are compitable with Windows also, and the binary utility hog.cpp depends on unistd.h.
