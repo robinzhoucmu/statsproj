@@ -1,0 +1,131 @@
+\documentclass{report}
+\usepackage{amsmath, amssymb, amsfonts, amsthm}
+\usepackage{fancyhdr, graphicx}
+\usepackage{framed}
+% Figure Counter.
+\newcounter{myFCounter}[section]
+
+% Homework Data:
+% HW Title:
+\newcommand{\hwkTitle}{Project Midterm Report}
+% Homework Date:
+\newcommand{\hwkDate}{}
+% My name!
+\newcommand{\hwkAuthor}{Karthik Lakshmanan}
+% Class name:
+\newcommand{\hwkClass}{16-831: Statistical Techniques for Robotics}
+
+% Margins:
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+% Header & Footer
+\pagestyle{fancy}
+\lhead{\hwkAuthor}
+\chead{\hwkClass   -  \hwkTitle}
+\lfoot{}
+\cfoot{}
+\rfoot{Page\ \thepage}
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+%%%%%%
+% Extra (Awesome) Functions:
+%%%%%%
+
+% Boxes & Centers solution. 
+% Usage: \soln{This is the solution.}
+\newcommand{\soln}[1]{ \begin{center} \fbox{#1} \end{center}}
+
+% Inserts a number in scientific notation. 
+% Usage: <mantissa>\e{<exponent>}
+\providecommand{\e}[1]{\ensuremath{\times 10^{#1}}}
+
+% Adds a degree symbol. Usage: <temperature>\degree C
+\newcommand{\degree}{\(^\circ\)}
+
+% Adds a partial differential fraction. Usage: \dd{V}{T} % For dV/dT
+\newcommand{\dd}[2]{\ensuremath{\frac{\partial #1}{\partial #2}}}
+
+% Inserts a simple figure. 
+% Usage: \myFigure{filename/label}{caption}
+\newcommand{\myFigure}[2]{
+\begin{center}\begin{minipage}[t]{\columnwidth}
+\refstepcounter{myFCounter}
+\label{#1}
+\includegraphics[width=\columnwidth,keepaspectratio]{#1}\ \\
+\small{\sc Figure \arabic{myFCounter}:\ \rm #2}
+\end{minipage}\end{center}
+}
+
+% Inserts a small figure; good for multicolumns. 
+% Usage: \mySmallFigure{filename/label}{caption}{scale}
+\newcommand{\mySmallFigure}[3]{
+\begin{center}\begin{minipage}[t]{\columnwidth}
+\refstepcounter{myFCounter}
+\label{#1}
+\begin{center}
+\includegraphics[width=#3\columnwidth,keepaspectratio]{#1}
+\end{center}
+\small{\sc Figure \arabic{myFCounter}:\ \rm #2}
+\end{minipage}\end{center}
+}
+
+% Inserts a large figure.
+% Usage: \myLargeFigure{filename/label}{caption}{scale}
+\newcommand{\myLargeFigure}[3]{
+\begin{figure*}
+\refstepcounter{myFCounter}
+\label{#1}
+\includegraphics[width=#3\textwidth,keepaspectratio]{#1}\ \\
+\centering{\begin{flushleft}\small{\sc Figure \arabic{myFCounter}:\ \rm #2}\end{flushleft}}
+\end{figure*}
+}
+
+\newcommand{\fnum}{\begin{enumerate}\item}
+\newcommand{\bnum}{\end{enumerate}}
+
+\newcommand{\ftem}{\begin{itemize}\item}
+\newcommand{\btem}{\end{itemize}}
+
+\newcommand{\problem}[1]{{\bf #1} \newline}
+\newcommand{\barray}{\begin{array}}
+\newcommand{\earray}{\end{array}}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\section*{Object detection via Contextual Sequence Optimization - an alternative to non-max suppression}
+\subsection*{Image features}
+
+In order to detect people in images, we are using the Histogram of Oriented Gradients (HOG) as feature descriptors. These descriptors were first used by Dalal and Triggs \cite{HoG} to detect humans in 2D images. The key idea behind the Histogram of Oriented Gradient descriptors is that local object appearance and shape within an image can be described by the distribution of intensity gradients or edge directions. To compute these features, the image is divided into small connected regions, called cells, and for each cell we compile a histogram of gradient directions or edge orientations for the pixels within the cell. The combination of these histograms then represents the descriptor. For improved accuracy, the local histograms can be contrast-normalized by calculating a measure of the intensity across a larger region of the image, called a block, and then using this value to normalize all cells within the block. This normalization results in better invariance to changes in illumination or shadowing.
+
+An Integral Histogram representation, presented by Porikli \cite{IntHist} can be used for fast calculation of HoG features over arbitrary rectangular regions of the image, as it is computationally efficient. This technique exploits the spatial arrangement of data points, and recursively propagates an aggregated histogram by starting from the origin and traversing through the remaining points along either a scan-line or a wave-front. At each step, a single bin is updated using the values of integral histogram at the previously visited neighboring data points. After the integral histogram is propagated, histogram of any target region can be computed easily by using simple arithmetic operations.
+
+We are using a C++ implementation of a HoG feature extractor that uses Integral Histograms, and was developed by Liang-Liang He. We are currently able to extract a vector HoG features for any given rectangular window. We are currently using 8 orientation bins and a cell size of 4x4 pixels. We will continue to tune these parameters for better detection of people in images.
+
+\begin{thebibliography}{9}
+
+\bibitem{HoG}
+  Navneet Dalal, Bill Triggs,
+  \emph{Histograms of Oriented Gradients for Human Detection}.
+  Computer Vision and Pattern Recognition, San Diego, CA, June 20Ð25, 2005
+
+\bibitem{IntHist}
+F. Porikli,
+\emph{Integral histogram: A fast way to extract histograms in cartesian spaces. }
+Conference on Computer Vision and Pattern Recognition (CVPR), 2005.
+
+\end{thebibliography}
+\end{document}
