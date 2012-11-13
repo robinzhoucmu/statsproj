@@ -1,0 +1,42 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{graphicx} 
+\usepackage{listings}
+\usepackage{framed}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{titling}
+
+\setlength{\droptitle}{-4em}     % Eliminate the default vertical space
+\addtolength{\droptitle}{-22pt}   % Only a guess. Use this for adjustment
+
+\title{ \bf
+Object detection via Contextual Sequence Optimization - an alternative to non-max suppression
+}
+
+\date{}
+\author{Shervin Javdani, Karthik Lakshmanan, Jiaji Zhou}
+
+
+
+\begin{document}
+\maketitle
+
+
+
+\section{Introduction}
+Imagine we have designed an object detector, taking image patches of a fixed size and scoring the belief that the object lies within that patch. Given a new image of a different size, we wish to detect where those objects are.
+
+The sliding window model is one of the most popular techniques for applying this detection to full 2d images. It is conceptually simple: slide the object detector of fixed size across an image, scoring each patch of the image independently. We could consider taking all patches which scored above a threshold, and calling those our detected objects. But it turns out that many patches spatially located near the object all score high. Thus, we may detect many objects when only one or two are truly there.
+
+In the current paradigm, a post-processing step known as non-maximal suppression is used to resolve dependencies between overlapping candidate windows. In this step, among all windows that overlap, only the one with the maximum score is retained and the others are discarded. However, this may be problematic - what if there were indeed multiple objects located there? Furthermore, we may expect that for some objects which tend to appear in groups, e.g. trees, having a detector fire actually provides more evidence that nearby patches are detecting trees.
+
+In this project, we will explore eliminating independence of the various sliding windows. In particular, we explore the use of using previous object detection decisions and scores to determine where to place the next detection window. The problem can then be formulated as - given window Wi with score Si, where should window Wi+1 be placed in order to maximise some scoring objective (Eg: Coverage). To do so efficiently, we will apply recent work on Contextual Sequence Prediction~\cite{dey_2012_conseqopt} and submodular function maximization.
+
+
+\bibliographystyle{plain}
+\bibliography{refs}
+
+
+\end{document}
